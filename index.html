@@ -1,56 +1,339 @@
 <!DOCTYPE html>
-<html> 
-   <head> 
-          <meta charset="utf-8">
-          <meta name="veiwport" content="wiflowersdth=device-                          width, initial-scale=1">
-          <title>A Little Bit About Flowers</title>
- 
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ARE U A LOSER???</title>
+<style>
+/* ===== CSS = HOW IT LOOKS (colors are set from the EDIT ME block below) ===== */
+html { height: 100%; }
+body {
+  margin: 0; height: 100%;
+  overflow: hidden;
+  background: repeating-linear-gradient(45deg, var(--bg1) 0 20px, var(--bg2) 20px 40px);
+  font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+  color: var(--text);
+  text-align: center;
+}
+#headline {
+  font-size: clamp(2rem, 9vw, 5rem);
+  margin: 30px 10px 10px;
+  color: #000;          /* black text */
+  text-shadow: none;    /* removes the colored outline */
+}
 
+#dodge {
+  position: fixed; left: 40%; top: 55%; z-index: 5;
+  font-family: inherit; font-size: 1.2rem; font-weight: bold;
+  padding: 18px 22px; max-width: 80vw;
+  background: var(--btn); color: var(--btn-text);
+  border: 6px dashed var(--border);
+  border-radius: 40px 5px 40px 5px;
+  cursor: pointer;
+  transition: left 0.15s, top 0.15s;
+  animation: wobble 0.3s ease-in-out infinite alternate;
+
+.meme {
+  position: fixed; width: 220px; z-index: 20;
+  background: var(--popup-bg); color: #000;
+  border: 6px solid var(--btn); padding: 10px;
+  font-weight: bold; font-size: 1.1rem;
+  pointer-events: none;
+  animation: pop 0.25s ease-out;
+}
+.meme .big { font-size: 3.5rem; }
+.meme img { max-width: 100%; }
+@keyframes pop { from { transform: scale(0) rotate(180deg); } }
+}
+#counter { position: fixed; left: 8px; bottom: 40px; background: #000; color: #0f0; padding: 4px 8px; font-family: monospace; border: 3px ridge var(--border); }
+#ticker  { position: fixed; left: 0; right: 0; bottom: 0; background: #000; color: var(--text); overflow: hidden; white-space: nowrap; padding: 6px 0; }
+#ticker span { display: inline-block; padding-left: 100%; animation: scroll 8s linear infinite; }
+@keyframes scroll { to { transform: translateX(-100%); } }
+
+// ----- 4. MEMES (shown at random when someone misses) -----
+
+// A) PICTURE MEMES: list every image file name here (same folder as index.html).
+// Add as many as you want! Just keep the quotes and commas.
+// Tip: file names must match EXACTLY, including capital letters and .jpg/.png
+const MEME_IMAGES = [
+  "591167888577309538.jfif",
+  "easy.jfif",
+  "pezy.jfif",
+  "lemon.jfif",
+  "squeezy.jfif",
+  "a.jfif",
+  "b.jfif",
+  "c.jfif",
+  "d.jfif",
+  "e.jfif",
+  // add more lines like:  "mynewmeme.jpg",
+];
+
+// B) CAPTIONS: a random one is shown under each picture meme.
+// Use "" (empty) if you want some pictures with no caption.
+const CAPTIONS = [
+  "SKILL ISSUE",
+  "bro missed AGAIN",
+  "my grandma clicks faster than u",
+  "NPC behavior detected",
+  "L + ratio + u missed",
+  "",
+  "imagine being this slow"
+];
+
+// C) EMOJI MEMES (optional extras, used about 30% of the time). Make it [] to turn them off.
+const MEMES = [
+  { emoji: "💀", text: "SKILL ISSUE" },
+  { emoji: "🗿", text: "u tried" },
+  { emoji: "🤡", text: "honk honk" }
+];
+
+#loading { display: none; position: fixed; inset: 0; z-index: 50; background: var(--bg2); padding: 20px; box-sizing: border-box; font-size: 1.4rem; }
+#barbox { margin: 20px auto; width: min(500px, 90%); height: 40px; border: 5px solid #000; background: #fff; }
+#bar { height: 100%; width: 0%; background: repeating-linear-gradient(45deg, #f00 0 10px, #ff0 10px 20px); transition: width 0.4s; }
+#spinner { margin: 20px auto; width: 70px; height: 70px; border: 12px solid #000; border-top-color: var(--text); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#crash { display: none; position: fixed; inset: 0; z-index: 100; background: #0000aa; color: #fff; font-family: monospace; text-align: left; padding: 30px; box-sizing: border-box; font-size: 1.1rem; }
+#crash button { margin-top: 20px; font-family: "Comic Sans MS", cursive, sans-serif; font-size: 1.1rem; padding: 10px; }
+</style>
 </head>
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Custom Background</title>
-    <style>
-        body {
-            background-image: url('1110348483158182583.jfif'); 
-            background-repeat: no-repeat; 
-            background-position: center; 
-            background-size: cover; 
-            background-attachment: fixed; 
-            background-color: #f0f0f0; 
-            margin: 0;
-            padding: 0;
-        }
-    </style>
 <body>
- <h1>A Little Bit About Flowers</h1>
-   <h3> Our busy lives don't allow us enough time to properly appreciate their beauty and history, so I made a little website to help with that. Not only is the information here short, but it's also readable, well-researched, and fun!
-    </h3>
 
-<h3>A Dash of Biology</h3>
-<h4>"Flower" or "blossom(s)" is the term used for the reproductive part of flowering plants.<br>
-Now, I want you to look at the two flowers shown below.<br>
+<!-- ===== HTML = THE THINGS ON THE PAGE ===== -->
+<div id="game">
+  <h1 id="headline">UR A LOSER!!!</h1>
+  <div class="blink">⚠️ PLEASE CLICK THE BUTTON ⚠️</div>
+  <button id="dodge">click if u r not a loser</button>
+  <div id="counter">failed clicks: 0</div>
+  <div id="ticker"><span>🔥 WELCOME 2 THE WORST WEBSITE EVER 🔥 U R PROBABLY AN NPC 🔥 NO REFUNDS 🔥</span></div>
+</div>
 
- <img src="images.webp" alt="First Image" style="width: 45%; margin-right: 5%; height: auto;">
-<img src="images2.webp" alt="Second Image" style="width: 45%; height: auto;">
+<div id="loading">
+  <div id="loadtext">Loading ur personality...</div>
+  <div id="barbox"><div id="bar"></div></div>
+  <div id="pct">0%</div>
+  <div id="spinner"></div>
+</div>
 
-<br>
-Beautiful as they are, it's a wonder they share the same function when they look so different.
-But why is that?
-<br>
-<br>
-Well, it largely comes down to <b>evolution</b>. The Earth is vast and plays host to <i>many</i> different environments. Ergo, the specific pollinators of each environment are different, and flowers have had to adapt to them.<br>
-Take the Himalayan Blue Poppy (Meconopsis betonicifolia), which has papery, saucer-shaped petals that prevent the flower from snapping when harsh mountain winds blow. In contrast, the Angel's Trumpet (Brugmansia) is funnel-shaped, as it has adapted to pollinators like hawkmoths, drawn in by its amplified smell.<br></h4>
+<div id="crash">
+  <p>:( ur site ran into a problem</p>
+  <p id="crashmsg"></p>
+  <p>ERROR CODE: SKILL_ISSUE_0xDEADBEEF</p>
+  <p>Collecting error info... 100% (it lied)</p>
+  <button id="restart">RESTART (u wont escape)</button>
+</div>
 
-<h2>
-    NEXT UP: Common Flower Genera<br>
-    <i><b>stay tuned!</b></i>
-</h2>
+<script>
+/* ==================================================================
+   ⭐⭐⭐  EDIT ME  ⭐⭐⭐   (the only part you NEED to change)
+   Keep the quote marks "" and commas , exactly like they are.
+   ================================================================== */
 
+// ----- 1. COLORS (any hex code like #ff00ff, or a name like "red") -----
+const COLORS = {
+  background1: "#ec1313",   // stripe color 1
+  background2: "#5418ec",   // stripe color 2 (also the loading screen color)
+  
+  text:        "#ffe700",   // all the text
+  button:      "#ff0000",   // button color
+  buttonText:  "#ff9b00",   // text on the button
+  border:      "#000000",   // borders and shadows
+  popupBackground: "#ffffff" // meme popup box color
+};
 
+// ----- 2. BACKGROUND IMAGE -----
+// "" = use the ugly stripes. Or put your picture's file name, like "mybg.jpg"
+const BACKGROUND_IMAGE = "";
 
+// ----- 3. THE INSULT WORDS -----
+const WORDS = ["boomer", "loser", "unc", "NPC", "newb"];
+
+// ----- 4. MEMES (shown at random when someone misses) -----
+// text = caption.   img = your picture's file name (same folder as this file).
+// If you leave img as "" it shows the emoji instead.
+const MEMES = [
+  { img: "",          emoji: "💀", text: "SKILL ISSUE" },
+  { img: "",          emoji: "😭", text: "bro missed AGAIN" },
+  { img: "meme1.jpg", emoji: "",   text: "my grandma clicks faster than u" },
+  { img: "meme2.png", emoji: "",   text: "NPC behavior detected" }
+  // copy a line above to add more memes!
+];
+
+// ----- 5. FAKE "FAILED CLICKS" COUNTER -----
+// The counter shows these numbers in order: 1st miss shows the 1st number,
+// 2nd miss shows the 2nd, etc. When the list runs out it picks randomly from it.
+// Numbers OR text both work (text needs quotes).
+const FAKE_COUNTS = [69, 420, 9999, -5, 0, "NaN", "infinity", 1, 8008135, "lots"];
+
+// ----- 6. TIMING AND DIFFICULTY -----
+const SECONDS_BEFORE_WORD_CHANGES = 5;   // words change if no click in this many seconds
+const DODGE_RADIUS_START = 140;          // how close the mouse gets before the button runs away (pixels)
+const MISSES_UNTIL_FAIR = 8;             // after this many misses the button stops dodging (so people CAN win)
+const CRASH_AFTER_SECONDS = 12;          // how long the fake loading lasts
+
+/* ==================================================================
+   ⬇⬇⬇  EVERYTHING BELOW IS THE BRAIN. You can ignore it.  ⬇⬇⬇
+   ================================================================== */
+
+// ----- Apply your colors + background -----
+const root = document.documentElement;
+root.style.setProperty("--bg1", COLORS.background1);
+root.style.setProperty("--bg2", COLORS.background2);
+root.style.setProperty("--text", COLORS.text);
+root.style.setProperty("--btn", COLORS.button);
+root.style.setProperty("--btn-text", COLORS.buttonText);
+root.style.setProperty("--border", COLORS.border);
+root.style.setProperty("--popup-bg", COLORS.popupBackground);
+if (BACKGROUND_IMAGE !== "") {
+  document.body.style.background = 'url("' + BACKGROUND_IMAGE + '") center / cover';
+}
+
+//  Grab things from the HTML 
+const btn = document.getElementById("dodge");
+const headline = document.getElementById("headline");
+const counter = document.getElementById("counter");
+
+//  Memory (variables) 
+let currentWord = WORDS[1];
+let fails = 0;          // the REAL number of misses (used for difficulty)
+let finished = false;
+let wordTimer = null;
+
+//  Changing words 
+function showWord(word) {
+  currentWord = word;
+  headline.textContent = "UR A " + word.toUpperCase() + "!!!";
+  btn.textContent = "click if u r not a " + word;
+}
+function pickNewWord() {
+  let next = currentWord;
+  while (next === currentWord) {
+    next = WORDS[Math.floor(Math.random() * WORDS.length)];
+  }
+  showWord(next);
+  moveButton();
+  startWordTimer();
+}
+function startWordTimer() {
+  clearTimeout(wordTimer);
+  wordTimer = setTimeout(pickNewWord, SECONDS_BEFORE_WORD_CHANGES * 1000);
+}
+
+// ----- The dodging button -----
+function moveButton(avoidX, avoidY) {
+  const w = btn.offsetWidth;
+  const h = btn.offsetHeight;
+  let x, y;
+  for (let i = 0; i < 15; i++) {
+    x = 10 + Math.random() * (window.innerWidth - w - 20);
+    y = 90 + Math.random() * (window.innerHeight - h - 160);
+    if (avoidX === undefined) break;
+    const dist = Math.hypot(x + w / 2 - avoidX, y + h / 2 - avoidY);
+    if (dist > 220) break;
+  }
+  btn.style.left = Math.max(5, x) + "px";
+  btn.style.top = Math.max(60, y) + "px";
+}
+function dodgeIfClose(mouseX, mouseY) {
+  if (finished) return;
+  const r = btn.getBoundingClientRect();
+  const dist = Math.hypot(r.left + r.width / 2 - mouseX, r.top + r.height / 2 - mouseY);
+  const radius = fails >= MISSES_UNTIL_FAIR ? 0 : DODGE_RADIUS_START - fails * 12;
+  if (dist < radius + r.width / 2) {
+    moveButton(mouseX, mouseY);
+  }
+}
+document.addEventListener("pointermove", e => dodgeIfClose(e.clientX, e.clientY));
+document.addEventListener("pointerdown", e => dodgeIfClose(e.clientX, e.clientY));
+
+//  Failed clicks = memes + fake counter 
+document.addEventListener("click", e => {
+  if (finished) return;
+  if (e.target === btn) return;      // clicking the button = a WIN, not a fail
+  fails++;
+  counter.textContent = "failed clicks: " + getFakeCount();
+  showMeme(e.clientX, e.clientY);
+  document.body.classList.add("shake");
+  setTimeout(() => document.body.classList.remove("shake"), 300);
+});
+
+function getFakeCount() {
+  if (fails <= FAKE_COUNTS.length) {
+    return FAKE_COUNTS[fails - 1];                       // go through YOUR list in order
+  }
+  return FAKE_COUNTS[Math.floor(Math.random() * FAKE_COUNTS.length)];  // then random
+}
+
+function showMeme(x, y) {
+  const meme = MEMES[Math.floor(Math.random() * MEMES.length)];
+  const box = document.createElement("div");
+  box.className = "meme";
+  box.innerHTML = meme.img !== ""
+    ? '<img src="' + meme.img + '"><div>' + meme.text + "</div>"
+    : '<div class="big">' + meme.emoji + "</div><div>" + meme.text + "</div>";
+  box.style.left = Math.min(Math.max(5, x - 110), window.innerWidth - 235) + "px";
+  box.style.top = Math.min(Math.max(70, y - 80), window.innerHeight - 220) + "px";
+  box.style.transform = "rotate(" + (Math.random() * 30 - 15) + "deg)";
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 1800);
+}
+
+//  Winning = the endless loading -----
+btn.addEventListener("click", win);
+
+function win() {
+  if (finished) return;
+  finished = true;
+  clearTimeout(wordTimer);
+  document.getElementById("game").style.display = "none";
+  document.getElementById("loading").style.display = "block";
+
+  const messages = [
+    "Loading ur personality...",
+    "Deleting ur free will...",
+    "Downloading more RAM...",
+    "Almost there (lie)...",
+    "Asking ur mom for permission...",
+    "Counting to infinity..."
+  ];
+  const bar = document.getElementById("bar");
+  const pct = document.getElementById("pct");
+  const text = document.getElementById("loadtext");
+  let progress = 0;
+  let ticks = 0;
+
+  const loader = setInterval(() => {
+    ticks++;
+    progress += Math.random() * 7;
+    if (progress >= 99) {              // almost done? JUST KIDDING, go backwards
+      progress = 30 + Math.random() * 40;
+      text.textContent = messages[Math.floor(Math.random() * messages.length)];
+    }
+    bar.style.width = progress + "%";
+    pct.textContent = Math.floor(progress) + "%";
+    if (ticks % 6 === 0) {
+      text.textContent = messages[Math.floor(Math.random() * messages.length)];
+    }
+  }, 400);
+
+  setTimeout(() => { clearInterval(loader); crash(); }, CRASH_AFTER_SECONDS * 1000);
+}
+
+//  The crash 
+function crash() {
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("crash").style.display = "block";
+  document.getElementById("crashmsg").textContent =
+    "ur_a_" + currentWord + ".exe has stopped working. (we knew u were a " + currentWord + " all along)";
+  document.title = "💀 CRASHED";
+}
+document.getElementById("restart").addEventListener("click", () => location.reload());
+
+//  Start everything 
+showWord(currentWord);
+moveButton();
+startWordTimer();
+</script>
 </body>
 </html>
-
-
-
